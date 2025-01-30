@@ -2,6 +2,7 @@ import React from "react";
 import { formatDate } from "@/utils/helpers";
 import Pagination from "@/components/Pagination";
 import { User } from "@/features/users/interfaces";
+import { Property } from "@/features/properties/interfaces";
 
 interface Column {
   header: string;
@@ -10,7 +11,7 @@ interface Column {
 
 interface TableComponentProps {
   columns: Column[];
-  data: User[];
+  data: User[] | Property[];
   rowsPerPage: number;
   loading: boolean;
   currentPage: number;

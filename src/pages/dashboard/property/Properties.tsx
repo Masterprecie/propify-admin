@@ -1,5 +1,5 @@
 import TableComponent from "@/components/TableComponent";
-import { useGetAllUsersQuery } from "@/features/users/api";
+import { useGetAllPropertiesQuery } from "@/features/properties/api";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useState } from "react";
 
@@ -18,15 +18,19 @@ const Properties = () => {
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  const { data: getUser, isLoading } = useGetAllUsersQuery({
+  const { data: getProperties, isLoading } = useGetAllPropertiesQuery({
     page: currentPage,
     limit: rowsPerPage,
     search: debouncedSearchQuery,
   });
 
-  const userDetails = getUser?.data?.docs;
+  const propertyDetails = getProperties?.data?.docs;
 
-  const totalPages = Math.ceil((getUser?.data?.totalDocs || 0) / rowsPerPage);
+  const totalPages = Math.ceil(
+    (getProperties?.data?.totalDocs || 0) / rowsPerPage
+  );
+
+  console.log("Property Details:", propertyDetails);
 
   const handleEdit = (id: string) => {
     console.log("Edit user with id:", id);
@@ -47,13 +51,15 @@ const Properties = () => {
       <h1 className="text-2xl font-bold mb-4">User Table</h1>
       <TableComponent
         columns={columns}
-        data={userDetails || []}
+        data={propertyDetails || []}
         loading={isLoading}
         rowsPerPage={rowsPerPage}
         currentPage={currentPage}
         totalPages={totalPages}
         searchQuery={searchQuery}
         searchable={true}
+        isAddButton={true}
+        addItem="Add Property"
         onEdit={handleEdit}
         onDelete={handleDelete}
         onView={handleView}
