@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Oswald", "sans-serif";
+  --authBackground: url("./src/assets/images/authBg.jpg");
+}
