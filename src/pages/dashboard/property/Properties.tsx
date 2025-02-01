@@ -1,22 +1,31 @@
 import TableComponent from "@/components/TableComponent";
-import { useGetAllPropertiesQuery } from "@/features/properties/api";
+import {
+  useDeletePropertyMutation,
+  useGetAllPropertiesQuery,
+} from "@/features/properties/api";
 import { useDebounce } from "@/hooks/useDebounce";
+import { alert } from "@/utils/alert";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+const columns = [
+  { header: "Name", key: "title" },
+  { header: "Location", key: "location" },
+  { header: "Category", key: "category" },
+  { header: "Price", key: "price" },
+  { header: "Duration", key: "priceDuration" },
+  { header: "Date Created", key: "createdAt" },
+];
 const Properties = () => {
-  const columns = [
-    { header: "First Name", key: "firstName" },
-    { header: "Last Name", key: "lastName" },
-    { header: "Phone Number", key: "phoneNumber" },
-    { header: "Email", key: "email" },
-    { header: "Date Created", key: "createdAt" },
-  ];
+  const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  const [deleteProperty] = useDeletePropertyMutation();
 
   const { data: getProperties, isLoading } = useGetAllPropertiesQuery({
     page: currentPage,
@@ -34,12 +43,28 @@ const Properties = () => {
 
   const handleEdit = (id: string) => {
     console.log("Edit user with id:", id);
-    // Implement edit functionality
+    navigate(`/dashboard/property?id=${id}`);
   };
 
   const handleDelete = (id: string) => {
     console.log("Delete user with id:", id);
-    // Implement delete functionality
+    deleteProperty(id)
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        alert({
+          type: "success",
+          message: `Property Deleted successfully`,
+          timer: 2000,
+        });
+      })
+      .catch((error) => {
+        alert({
+          type: "error",
+          message: error?.data?.message || "An error occurred",
+          timer: 2000,
+        });
+      });
   };
 
   const handleView = (id: string) => {

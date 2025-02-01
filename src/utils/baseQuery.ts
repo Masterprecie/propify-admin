@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { logout, setCredentials } from "@/features/auth/authSlice";
+import { RefreshTokenResponse } from "@/features/auth/interfaces";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -30,7 +31,7 @@ export const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError,
-  {},
+  object,
   FetchBaseQueryMeta
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
@@ -48,7 +49,7 @@ export const baseQueryWithReauth: BaseQueryFn<
     if (refreshToken) {
       const refreshResult = await baseQuery(
         {
-          url: "/auth/refresh", // Your refresh token endpoint
+          url: "/auth/refresh-token", // Your refresh token endpoint
           method: "POST",
           body: { refreshToken: refreshToken },
         },
@@ -56,9 +57,10 @@ export const baseQueryWithReauth: BaseQueryFn<
         extraOptions
       );
 
-      if (refreshResult?.data) {
+      const refreshData = refreshResult?.data as RefreshTokenResponse;
+      if (refreshData?.data) {
         // If refresh is successful, store new tokens
-        const newAccessToken = refreshResult.data.accessToken;
+        const newAccessToken = refreshData.data.accessToken;
         const updatedUserData = {
           ...userData, // Keep all other user info intact
           accessToken: newAccessToken,

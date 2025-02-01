@@ -21,7 +21,7 @@ export interface RegisterPayload {
   lastName: string;
   email: string;
   password: string;
-  role: string;
+  role?: string;
 }
 
 export interface LoginResponse extends IResponse {
@@ -32,4 +32,10 @@ export interface LoginResponse extends IResponse {
 export interface LoginPayload {
   email: string;
   password: string;
+}
+
+export interface RefreshTokenResponse extends IResponse {
+  data: {
+    accessToken: string;
+  };
 }

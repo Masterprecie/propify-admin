@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { useRegisterMutation } from "@/features/auth/api";
 import { alert } from "@/utils/alert";
 import { signupValidationSchema } from "@/utils/validations";
+import { RegisterPayload } from "@/features/auth/interfaces";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Signup = () => {
 
   const [register, { isLoading }] = useRegisterMutation();
 
-  const registerUser = (values) => {
+  const registerUser = (values: RegisterPayload) => {
     console.log(values);
     const payload = {
       ...values,
@@ -51,24 +52,18 @@ const Signup = () => {
       });
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    resetForm,
-  } = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: signupValidationSchema,
-    onSubmit: (values) => registerUser(values),
-  });
+  const { errors, touched, handleSubmit, resetForm, getFieldProps } = useFormik(
+    {
+      initialValues: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+      },
+      validationSchema: signupValidationSchema,
+      onSubmit: (values) => registerUser(values),
+    }
+  );
   return (
     <div className="bg-[url(./src/assets/images/authBg.jpg)] bg-cover bg-no-repeat min-h-screen flex flex-col justify-center items-center">
       <div className="relative flex flex-col justify-center items-center border-8 border-white rounded-3xl mx-auto w-[1000px] p-10">
@@ -77,10 +72,7 @@ const Signup = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <input
-                value={values.firstName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                name="firstName"
+                {...getFieldProps("firstName")}
                 type="text"
                 id="username"
                 className="w-full outline-none text-sm bg-gray-200 px-3 py-2 rounded-2xl"
@@ -92,10 +84,7 @@ const Signup = () => {
             </div>
             <div className="mb-4">
               <input
-                value={values.lastName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                name="lastName"
+                {...getFieldProps("lastName")}
                 type="text"
                 id="lastName"
                 className="w-full outline-none text-sm bg-gray-200 px-3 py-2 rounded-2xl"
@@ -107,10 +96,7 @@ const Signup = () => {
             </div>
             <div className="mb-4">
               <input
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                name="email"
+                {...getFieldProps("email")}
                 type="email"
                 id="email"
                 className="w-full outline-none text-sm bg-gray-200 px-3 py-2 rounded-2xl"
@@ -122,10 +108,7 @@ const Signup = () => {
             </div>
             <div className="mb-4 relative">
               <input
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                name="password"
+                {...getFieldProps("password")}
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 className="w-full outline-none text-sm bg-gray-200 px-3 py-2 rounded-2xl"

@@ -3,6 +3,7 @@ import { formatDate } from "@/utils/helpers";
 import Pagination from "@/components/Pagination";
 import { User } from "@/features/users/interfaces";
 import { Property } from "@/features/properties/interfaces";
+import { useNavigate } from "react-router-dom";
 
 interface Column {
   header: string;
@@ -50,28 +51,36 @@ const TableComponent: React.FC<TableComponentProps> = ({
     onSearchChange(e.target.value);
     onPageChange(1); // Reset to the first page on new search
   };
+  const navigate = useNavigate();
 
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = data?.slice(startIndex, startIndex + rowsPerPage);
 
   return (
     <div className="w-full overflow-auto">
-      {searchable && (
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-md px-4 py-2 border outline-none rounded"
-          />
-        </div>
-      )}
-      {isAddButton && (
-        <div className="mb-4">
-          <button>Add {addItem}</button>
-        </div>
-      )}
+      <div className="flex justify-between items-center mb-2">
+        {searchable && (
+          <div className="">
+            <input
+              type="text"
+              placeholder="Search with name or location"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-md px-4 py-2 border outline-none rounded"
+            />
+          </div>
+        )}
+        {isAddButton && (
+          <div className=" ">
+            <button
+              onClick={() => navigate("/dashboard/property")}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              {addItem}
+            </button>
+          </div>
+        )}
+      </div>
       <table className="min-w-full bg-white">
         <thead>
           <tr>

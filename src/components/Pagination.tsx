@@ -49,7 +49,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
         className="ml-4 border rounded px-2 py-1"
       >
-        {[5, 10, 15].map((rows) => (
+        {[10, 20, 30, 40, 50, 100].map((rows) => (
           <option key={rows} value={rows}>
             {rows} rows
           </option>

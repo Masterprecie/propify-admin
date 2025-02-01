@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.ql-container {
+  min-height: 200px !important;
+}
+
 @theme {
   --font-display: "Oswald", "sans-serif";
   --authBackground: url("./src/assets/images/authBg.jpg");

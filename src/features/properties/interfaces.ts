@@ -6,14 +6,28 @@ export interface IResponse<T> {
   data: T | null;
 }
 
+export interface PropertyPayload {
+  id?: string;
+  title: string;
+  description: string;
+  price: number;
+  priceDuration: string;
+  location: string;
+  status: string;
+  category: string;
+  bedrooms: number;
+  facilities?: string[];
+  images?: string[];
+}
+
 export interface Property {
   _id: string;
   title: string;
   description: string;
   price: number;
+  priceDuration: string;
   location: string;
   status: string;
-  type: string;
   category: string;
   bedrooms: number;
   facilities: string[];
@@ -47,7 +61,7 @@ export interface Property {
       updatedAt: string;
     }
   ];
-  id: string;
+  id?: string;
   [key: string]: any;
 }
 

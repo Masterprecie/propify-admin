@@ -5,11 +5,13 @@ import {
   PaginatedResponse,
   IResponse,
   Property,
+  PropertyPayload,
 } from "./interfaces";
 
 export const propertyApi = createApi({
   reducerPath: "propertyApi",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["Property", "SingleProperty"],
   endpoints: (builder) => ({
     getAllProperties: builder.query<
       PaginatedResponse<Property>,
@@ -26,31 +28,40 @@ export const propertyApi = createApi({
           method: "GET",
         };
       },
+      providesTags: [{ type: "Property" }],
     }),
-    postProperty: builder.mutation<IResponse<Property>, Property>({
+    postProperty: builder.mutation<IResponse<Property>, PropertyPayload>({
       query: (payload) => ({
         url: `/property`,
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: [{ type: "Property" }],
     }),
-    getAProperty: builder.query<Property, string | number>({
+    getAProperty: builder.query<Property, string | null>({
       query: (id) => ({
         url: `/property/${id}`,
         method: "GET",
       }),
+      providesTags: [{ type: "SingleProperty" }],
     }),
-    editProperty: builder.mutation<IResponse<Property>, void>({
-      query: (id) => ({
+    editProperty: builder.mutation<
+      IResponse<Property>,
+      { payload: PropertyPayload; id: string }
+    >({
+      query: ({ payload, id }: { payload: PropertyPayload; id: string }) => ({
         url: `/property/${id}`,
         method: "PUT",
+        body: payload,
       }),
+      invalidatesTags: [{ type: "Property" }, { type: "SingleProperty" }],
     }),
-    deleteProperty: builder.mutation<IResponse<Property>, void>({
+    deleteProperty: builder.mutation<IResponse<Property>, string>({
       query: (id) => ({
         url: `/property/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: [{ type: "Property" }],
     }),
   }),
 });
